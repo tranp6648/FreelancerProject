@@ -1342,6 +1342,8 @@
     <script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="~/Frontend/assets/vendor/jquery/jquery.min.js"></script>
     <script src="~/Frontend/assets/vendor/jquery.plugin/jquery.plugin.min.js"></script>
+    
+
     <script src="~/Frontend/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
     <script src="~/Frontend/assets/vendor/zoom/jquery.zoom.js"></script>
     <script src="~/Frontend/assets/vendor/jquery.countdown/jquery.countdown.min.js"></script>
@@ -1355,7 +1357,14 @@
     <script src="~/Frontend/assets/js/main.min.js"></script>
 
     @await RenderSectionAsync("Scripts",required:false)
-
+    <script>
+        $(document).ready(function () {
+            $('#create-compare').click(function (event) {
+                console.log("test")
+            });
+        });
+            });
+    </script>
     <script>
         $(document).ready(function () {
             $("#searchButton").click(function () {

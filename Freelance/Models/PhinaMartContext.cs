@@ -29,6 +29,8 @@ public partial class PhinaMartContext : DbContext
 
     public virtual DbSet<Comment> Comments { get; set; }
 
+    public virtual DbSet<Compare> Compares { get; set; }
+
     public virtual DbSet<Discount> Discounts { get; set; }
 
     public virtual DbSet<Inventory> Inventories { get; set; }
@@ -209,6 +211,21 @@ public partial class PhinaMartContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__Comments__User_i__5CD6CB2B");
+        });
+
+        modelBuilder.Entity<Compare>(entity =>
+        {
+            entity.ToTable("Compare");
+
+            entity.HasOne(d => d.IdProductNavigation).WithMany(p => p.Compares)
+                .HasForeignKey(d => d.IdProduct)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Compare_Products");
+
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Compares)
+                .HasForeignKey(d => d.IdUser)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Compare_Users");
         });
 
         modelBuilder.Entity<Discount>(entity =>

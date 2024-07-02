@@ -43,4 +43,29 @@ public class CommentServiceImpl : CommentService
             return false;
         }
     }
+
+    public bool CreateCompare(int id)
+    {
+        try
+        {
+            var Id = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+            if (Id == null)
+            {
+                throw new Exception("User ID claim not found");
+            }
+            var UserId = int.Parse(Id.Value);
+            var Compare = new Compare
+            {
+                IdProduct = id,
+                IdUser = UserId,
+            };
+            _phinaMartContext.Compares.Add(Compare);
+            return _phinaMartContext.SaveChanges()>0;
+        }
+        catch
+        {
+            return false;
+        }
+      
+    }
 }
