@@ -1,0 +1,86 @@
+﻿@model IEnumerable<PhinaMart.ViewModels.ProductVm>
+
+<!-- End of Breadcrumb -->
+<h4> <b> @Model.Count() </b>product </h4>
+<!-- Start of Page Content -->
+<div class="product-wrapper row cols-lg-4 cols-md-3 cols-sm-2 cols-2">
+    @foreach (var item in Model)
+    {
+        <div class="product-wrap">
+            <div class="product text-center">
+                <figure class="product-media">
+                    <a asp-action="Detail" asp-controller="Product" asp-route-id="@item.Id">
+                        <img src="~/media/products/@item.Image" alt="@item.Name" width="300" height="338" />
+                    </a>
+
+                    <div class="product-action-horizontal">
+                        <a asp-action="AddToCart" asp-controller="Cart" asp-route-id="@item.Id" class="btn-product-icon btn-cart w-icon-cart"
+                           title="Add to cart"></a>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a href="javascript:void(0);" class="btn-product-icon btn-wishlist w-icon-heart"
+                               title="Wishlist" data-product-id="@item.Id"></a>
+                        }
+                        else
+                        {
+                            <a href="javascript:void(0);" class="btn-product-icon btn-wishlist w-icon-heart"
+                               title="Wishlist" onclick="alert('You need to log in to add products to your wishlist.')"></a>
+                        }
+
+                        <a href="#" class="btn-product-icon btn-compare w-icon-compare"
+                           title="Compare"></a>
+                        <a href="#" class="btn-product-icon btn-quickview w-icon-search"
+                           title="Quick View"></a>
+                    </div>
+                </figure>
+                <div class="product-details">
+                    <div class="product-cat">
+                        <a asp-action="Index" asp-controller="Product" asp-route-category="@item.Id">@item.NameCategory</a>
+                    </div>
+                    <h3 class="product-name">
+                        <a asp-action="Detail" asp-controller="Product" asp-route-id="@item.Id">@item.Name</a>
+                    </h3>
+                    <div class="ratings-container">
+                        <div class="ratings-full">
+                            <span class="ratings" style="width: 100%;"></span>
+                            <span class="tooltiptext tooltip-top"></span>
+                        </div>
+                        <a href="product-default.html" class="rating-reviews">(3 reviews)</a>
+                    </div>
+                    <div class="product-pa-wrapper">
+                        <div class="product-price">
+                            $@item.Price
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<!-- End of Page Content -->
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.btn-wishlist').click(function () {
+                var productId = $(this).data('product-id');
+                console.log('Wishlist button clicked, productId:', productId); // Add this line to check if the event is triggered
+                $.ajax({
+                    url: '@Url.Action("AddToWishList", "WishList")',
+                    type: 'POST',
+                    data: { productId: productId },
+                    success: function (response) {
+                        if (response.success) {
+                            alert('Product added to wishlist.');
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('An error occurred. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
+}
