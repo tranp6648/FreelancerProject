@@ -1,4 +1,4 @@
-﻿@model PhinaMart.ViewModels.DetailProductVm
+﻿@model PhinaMart.ViewModels.ProductDetailAndCommentViewModel
 @using System.Security.Claims
 @{
     ViewData["Title"] = "Detail";
@@ -54,8 +54,8 @@
 
                                                 <div class="swiper-slide">
                                                     <figure class="product-image">
-                                            <img src="~/media/products/@Model.Image"
-                                                 data-zoom-image="~/media/products/@Model.Image"
+                                            <img src="~/media/products/@Model.ProductDetail.Image"
+                                                 data-zoom-image="~/media/products/@Model.ProductDetail.Image"
                                                             alt="Fashion Table Sound Marker" width="800" height="900">
                                                     </figure>
                                                 </div>
@@ -102,7 +102,7 @@
                                             <div class="product-thumbs swiper-wrapper row cols-4 gutter-sm">
 
                                                 <div class="product-thumb swiper-slide">
-                                        <img src="~/media/products/@Model.Image"
+                                        <img src="~/media/products/@Model.ProductDetail.Image"
                                                         alt="Product Thumb" width="800" height="900">
                                                 </div>
                                                 <div class="product-thumb swiper-slide">
@@ -130,7 +130,7 @@
                                 </div>
                                 <div class="col-md-6 mb-6 mb-md-8">
                                     <div class="product-details" data-sticky-options="{'minWidth': 767}">
-                                        <h1 class="product-title">@Model.Name</h1>
+                                        <h1 class="product-title">@Model.ProductDetail.Name</h1>
                                         <div class="product-bm-wrapper">
                                             <figure class="brand">
                                                 <img src="~/Frontend/assets/images/products/brand/brand-6.jpg" alt="Brand"
@@ -139,17 +139,17 @@
                                             <div class="product-meta">
                                                 <div class="product-categories">
                                                     Category:
-                                                    <span class="product-category"><a href="#">@Model.NameCategory</a></span>
+                                        <span class="product-category"><a href="#">@Model.ProductDetail.NameCategory</a></span>
                                                 </div>
                                                 <div class="product-sku">
-                                                    SKU: @Model.Id
+                                        SKU: @Model.ProductDetail.Id
                                                 </div>
                                             </div>
                                         </div>
 
                                         <hr class="product-divider">
 
-                                        <div class="product-price">$@Model.Price</div>
+                            <div class="product-price">$@Model.ProductDetail.Price</div>
 
                                         <div class="ratings-container">
                                             <div class="ratings-full">
@@ -162,7 +162,7 @@
                                         <div class="product-short-desc">
                                             <ul class="list-type-check list-style-none">
                                                 @* Mo ta ngan *@
-                                                <li>@Model.DescriptionShort</li>
+                                    <li>@Model.ProductDetail.DescriptionShort</li>
                                             </ul>
                                         </div>
 
@@ -173,7 +173,7 @@
                                             <div class="d-flex align-items-center product-variations">
                                                 @* for Images product *@
                                                 <a href="#" class="image">
-                                                    <img src="~/media/products/@Model.Image"
+                                                    <img src="~/media/products/@Model.ProductDetail.Image"
                                                         alt="Product Swatch" width="24" height="24" />
                                                     </a>
                                                 
@@ -198,7 +198,7 @@
                                         <div class="fix-bottom product-sticky-content sticky-content">
                                             <div class="product-form container">
                                                @*  From add to cart *@
-                                    <form asp-action="AddToCart" asp-controller="Cart" asp-route-id="@Model.Id">
+                                    <form asp-action="AddToCart" asp-controller="Cart" asp-route-id="@Model.ProductDetail.Id">
                                                 <div class="product-qty-form">
                                                     <div class="input-group">
                                                 <input class="quantity form-control" type="number" name="quantity" value="1" min="1">
@@ -254,7 +254,7 @@
                                             <div class="col-md-6 mb-5">
                                                 <h4 class="title tab-pane-title font-weight-bold mb-2">Detail</h4>
                                                @*  chi tiet *@
-                                                <p class="mb-4">@Model.Description</p>
+                                    <p class="mb-4">@Model.ProductDetail.Description</p>
 
                                             </div>
                                             <div class="col-md-6 mb-5">
@@ -387,7 +387,7 @@
                                                     <p class="mb-3">Your email address will not be published. Required fields are marked *</p>
 
                                                         @* form danh gia *@
-                                        <form action="#" method="POST" class="review-form">
+                                        <form asp-action="CreateComment" class="review-form" asp-controller="Product" asp-route-id="@Model.ProductDetail.Id" method="post">
                                             <div class="rating-form">
                                                 <label for="rating">Your Rating Of This Product :</label>
                                                 <span class="rating-stars">
@@ -397,7 +397,7 @@
                                                     <a class="star-4" href="#">4</a>
                                                     <a class="star-5" href="#">5</a>
                                                 </span>
-                                                <select name="rating" id="rating" required=""
+                                                <select  id="rating" 
                                                         style="display: none;">
                                                     <option value="">Rate…</option>
                                                     <option value="5">Perfect</option>
@@ -408,18 +408,9 @@
                                                 </select>
                                             </div>
                                             <textarea cols="30" rows="6"
-                                                      placeholder="Write Your Review Here..." class="form-control"
+                                                      placeholder="Write Your Review Here..." class="form-control" name="Comment_Text" asp-for="@Model.NewComment.Comment_Text"
                                                       id="review"></textarea>
-                                            <div class="row gutter-md">
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control"
-                                                           placeholder="Your Name" value="@User.Identity.Name" id="author">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control"
-                                                           placeholder="Your Email" value="@ViewBag.Email" id="email_1">
-                                                </div>
-                                            </div>
+                                            
                                             <div class="form-group">
                                                 <input type="checkbox" class="custom-checkbox"
                                                        id="save-checkbox">
@@ -1348,5 +1339,32 @@
                     </div>
                 </div>
             </div>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+        @if (TempData["Message"] != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: '@TempData["Message"]',
+                    });
+            </text>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '@TempData["Error"]',
+                    });
+            </text>
+        }
+                });
+    </script>
+}
             <!-- End of Page Content -->
 

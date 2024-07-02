@@ -34,59 +34,8 @@ namespace PhinaMart.Areas.Admin.Controllers
             return View();
         }
 
-        [Route("Create")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Product pr)
-        {
-            ViewBag.Categories = new SelectList(_PhinaContext.Categories, "Id", "Name", pr.CategoryId);
-            ViewBag.Brands = new SelectList(_PhinaContext.Brands, "Id", "CompanyName", pr.BrandId);
-
-            if (ModelState.IsValid)
-            {
-                pr.Slug = pr.Name.Replace(" ", "-");
-                var slug = await _PhinaContext.Products.FirstOrDefaultAsync(p => p.Slug == pr.Slug);
-                if (slug != null)
-                {
-                    ModelState.AddModelError("", "Sản phẩm đã có trong database");
-                    return View(pr);
-                }
-
-                if (pr.ImageUpload != null)
-                {
-                    string uploadsDir = Path.Combine(_webHostEnviroment.WebRootPath, "media/products");
-                    string imageName = Guid.NewGuid().ToString() + "_" + pr.ImageUpload.FileName;
-                    string filePath = Path.Combine(uploadsDir, imageName);
-
-                    FileStream fs = new FileStream(filePath, FileMode.Create);
-                    await pr.ImageUpload.CopyToAsync(fs);
-                    fs.Close();
-                    pr.Image = imageName;
-                }
-
-                _PhinaContext.Add(pr);
-                await _PhinaContext.SaveChangesAsync();
-                TempData["success"] = "Thêm sản phẩm thành công";
-                return RedirectToAction("Index");
-
-            }
-            else
-            {
-                TempData["error"] = "Model có một vài thứ đang lỗi";
-                List<string> errors = new List<string>();
-                foreach (var value in ModelState.Values)
-                {
-                    foreach (var error in value.Errors)
-                    {
-                        errors.Add(error.ErrorMessage);
-                    }
-                }
-                string errorMessage = string.Join("\n", errors);
-                return BadRequest(errorMessage);
-            }
-            return View(pr);
-        }
-
+      
+      
 
         [Route("Edit")]
 
@@ -102,77 +51,7 @@ namespace PhinaMart.Areas.Admin.Controllers
         [Route("Edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Product pr)
-        {
-            ViewBag.Categories = new SelectList(_PhinaContext.Categories, "Id", "Name", pr.CategoryId);
-            ViewBag.Brands = new SelectList(_PhinaContext.Brands, "Id", "CompanyName", pr.BrandId);
-            var existed_product = _PhinaContext.Products.Find(pr.Id);
-
-            if (ModelState.IsValid)
-            {
-                pr.Slug = pr.Name.Replace(" ", "-");
-
-                if (pr.ImageUpload != null)
-                {
-                    //upload new file
-                    string uploadsDir = Path.Combine(_webHostEnviroment.WebRootPath, "media/products");
-                    string imageName = Guid.NewGuid().ToString() + "_" + pr.ImageUpload.FileName;
-                    string filePath = Path.Combine(uploadsDir, imageName);
-
-                    //delete file pictureOld
-                    string oldfilePath = Path.Combine(uploadsDir, existed_product.Image);
-                    try
-                    {
-                        if (System.IO.File.Exists(oldfilePath))
-                        {
-                            System.IO.File.Delete(oldfilePath);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ModelState.AddModelError("", "An error occurred while deleting the product image.");
-                    }
-
-
-                    FileStream fs = new FileStream(filePath, FileMode.Create);
-                    await pr.ImageUpload.CopyToAsync(fs);
-                    fs.Close();
-                    existed_product.Image = imageName;
-                }
-                // Update other product properties
-                existed_product.Name = pr.Name;
-                existed_product.Description = pr.Description;
-                existed_product.Price = pr.Price;
-                existed_product.CategoryId = pr.CategoryId;
-                existed_product.BrandId = pr.BrandId;
-                //delete old picture
-
-
-
-                _PhinaContext.Update(existed_product); // Update the existing product object
-
-
-                await _PhinaContext.SaveChangesAsync();
-                TempData["success"] = "Cập nhật sản phẩm thành công";
-                return RedirectToAction("Index");
-
-            }
-            else
-            {
-                TempData["error"] = "Model có một vài thứ đang lỗi";
-                List<string> errors = new List<string>();
-                foreach (var value in ModelState.Values)
-                {
-                    foreach (var error in value.Errors)
-                    {
-                        errors.Add(error.ErrorMessage);
-                    }
-                }
-                string errorMessage = string.Join("\n", errors);
-                return BadRequest(errorMessage);
-            }
-            return View(pr);
-        }
+   
 
         public async Task<IActionResult> Delete(int Id)
         {

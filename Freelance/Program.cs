@@ -16,7 +16,6 @@ builder.Services.AddDbContext<PhinaMartContext>(x => x.UseSqlServer(connectionSt
 
 // Add Session
 builder.Services.AddDistributedMemoryCache();
-
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromSeconds(30);
@@ -55,6 +54,9 @@ builder.Services.AddSingleton(x => new PaypalClient(
 ));
 
 builder.Services.AddSingleton<IVnPayService, VnPayService>();
+builder.Services.AddScoped<CommentService, CommentServiceImpl>();
+
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

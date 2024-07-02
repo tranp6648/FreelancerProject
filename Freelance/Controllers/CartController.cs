@@ -41,7 +41,7 @@ namespace PhinaMart.Controllers
                 {
                     Id = proDuct.Id,
                     Name = proDuct.Name,
-                    Price = proDuct.Price ?? 0,
+                    Price = proDuct.Price ,
                     Image = proDuct.Image ?? string.Empty,
                     Quantity = quantity
                 };

@@ -5,6 +5,6 @@
      
      
         public string Comment_Text { get; set; }
-        public int? Rating { get; set; }
+      
     }
 }

@@ -6,16 +6,19 @@ using PhinaMart.ViewModels;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System;
+using PhinaMart.Services;
+using PhinaMart.Helpers;
 
 namespace PhinaMart.Controllers
 {
     public class ProductController : Controller
     {
         private readonly PhinaMartContext db;
-
-        public ProductController(PhinaMartContext context)
+        private readonly CommentService commentService;
+        public ProductController(PhinaMartContext context,CommentService commentService)
         {
             db = context;
+            this.commentService = commentService;
         }
         public IActionResult Index(int? category)
         {
@@ -29,7 +32,7 @@ namespace PhinaMart.Controllers
             {
                 Id = p.Id,
                 Name = p.Name,
-                Price = p.Price ?? 0,
+                Price = p.Price,
                 Image = p.Image ?? "",
                 DescriptionShort = p.DescriptionUnit ?? string.Empty,
                 NameCategory = p.Category.Name
@@ -51,7 +54,7 @@ namespace PhinaMart.Controllers
             {
                 Id = p.Id,
                 Name = p.Name,
-                Price = p.Price ?? 0,
+                Price = p.Price,
                 Image = p.Image ?? "",
                 DescriptionShort = p.DescriptionUnit ?? string.Empty,
                 NameCategory = p.Category.Name
@@ -71,25 +74,43 @@ namespace PhinaMart.Controllers
                 return Redirect("/404");
             }
 
-            var result = new DetailProductVm
+            var viewModel = new ProductDetailAndCommentViewModel
             {
-                Id = data.Id,
-                Name = data.Name,
-                Price = data.Price ?? 0,
-                Description = data.Description ?? string.Empty,
-                Image = data.Image ?? string.Empty,
-                DescriptionShort = data.DescriptionUnit ?? string.Empty,
-                NameCategory = data.Category.Name,
-                StockQuantity = 10, // Placeholder
-                StarRating = 5, // Placeholder
-
-            };
+                ProductDetail = new DetailProductVm
+                {
+                    Id = data.Id,
+                    Name = data.Name,
+                    Price = data.Price,
+                    Description = data.Description ?? string.Empty,
+                    Image = data.Image ?? string.Empty,
+                    DescriptionShort = data.DescriptionUnit ?? string.Empty,
+                    NameCategory = data.Category.Name,
+                    StockQuantity = 10, // Placeholder
+                    StarRating = 5, // Placeholder
+                }
+            }; 
             var email=User.FindFirst(ClaimTypes.Email)?.Value;
             ViewBag.Email = email;  
 
-            return View(result);
+            return View(viewModel);
         }
-       
+
+        [HttpPost]
+        [Route("CreateComment/{id}")]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateComment(int id,CreateComment createComment)
+        {
+            var result = commentService.CreateComment(createComment, id);
+            if (result)
+            {
+                TempData["Message"] = "Comment created successfully";
+            }
+            else
+            {
+                TempData["Error"] = "Failed to create comment";
+            }
+            return View("Detail");
+        }
 
     }
 }

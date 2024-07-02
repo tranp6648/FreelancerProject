@@ -37,7 +37,7 @@ namespace PhinaMart.Controllers
                     ProductId = w.ProductId.Value,
                     ProductName = w.Product.Name,
                     ProductImage = w.Product.Image,
-                    ProductPrice = w.Product.Price ?? 0,
+                    ProductPrice = w.Product.Price ,
                     InStock = w.Product.StockQuantity > 0
                 })
                 .ToListAsync();
