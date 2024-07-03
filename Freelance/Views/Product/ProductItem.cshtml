@@ -23,8 +23,10 @@
 
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <a href="javascript:void(0);" class="btn-product-icon btn-wishlist w-icon-heart"
-                               title="Wishlist" data-product-id="@item.Id"></a>
+                            <form asp-action="AddToWishList" asp-controller="WishList" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                <input type="hidden" name="productId" value="@item.Id" />
+                                <button type="submit" class="btn-product-icon btn-wishlist w-icon-heart" title="Wishlist"></button>
+                            </form>
                         }
                         else
                         {
@@ -68,6 +70,7 @@
     }
 </div>
 <!-- End of Page Content -->
+<<<<<<< HEAD
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript">
@@ -140,3 +143,6 @@
 
     </script>
 }
+=======
+
+>>>>>>> 0d58d4c1f5ca98968aae8a34be76e227ed1379b1

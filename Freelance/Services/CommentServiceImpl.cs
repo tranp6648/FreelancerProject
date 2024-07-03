@@ -16,32 +16,48 @@ public class CommentServiceImpl : CommentService
         _phinaMartContext = phinaMartContext;
     }
 
-    public bool CreateComment(CreateComment createComment, int id)
+    public bool CreateComment(CreateComment createComment, CreateRating createRating, int id)
     {
-        try
+        using (var transaction = _phinaMartContext.Database.BeginTransaction())
         {
-            var Id = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-            if (Id == null)
+            try
             {
-                throw new Exception("User ID claim not found");
-            }
-            var UserId = int.Parse(Id.Value);
+                var Id = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+                if (Id == null)
+                {
+                    throw new Exception("User ID claim not found");
+                }
+                var UserId = int.Parse(Id.Value);
 
-            {
-                var Comment = new Comment
+                // Create Comment
+                var comment = new Comment
                 {
                     UserId = UserId,
                     ProductId = id,
                     CreatedAt = DateTime.Now,
-                    CommentText=createComment.Comment_Text,
+                    CommentText = createComment.Comment_Text,
                 };
-                _phinaMartContext.Comments.Add(Comment);
+                _phinaMartContext.Comments.Add(comment);
+
+                
+                var rating = new Rating
+                {
+                    IdUser = UserId,
+                    IdProduct = id,
+                    CreateDate = DateTime.Now,
+                    Score = createRating.Score * 20,
+                };
+                _phinaMartContext.Ratings.Add(rating);
+
+                _phinaMartContext.SaveChanges();
+                transaction.Commit();
+                return true;
             }
-            return _phinaMartContext.SaveChanges() > 0;
-        }
-        catch
-        {
-            return false;
+            catch
+            {
+                transaction.Rollback();
+                return false;
+            }
         }
     }
     public bool DeleteCompare(int id)
@@ -82,12 +98,12 @@ public class CommentServiceImpl : CommentService
                 IdUser = UserId,
             };
             _phinaMartContext.Compares.Add(Compare);
-            return _phinaMartContext.SaveChanges()>0;
+            return _phinaMartContext.SaveChanges() > 0;
         }
         catch
         {
             return false;
         }
-      
+
     }
 }

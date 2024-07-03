@@ -54,7 +54,9 @@ builder.Services.AddSingleton(x => new PaypalClient(
 ));
 
 builder.Services.AddSingleton<IVnPayService, VnPayService>();
+builder.Services.AddSingleton<IVnPayService, VnPayService>();
 builder.Services.AddScoped<CommentService, CommentServiceImpl>();
+builder.Services.AddScoped<WishlistService, WishListServiceImpl>();
 
 builder.Services.AddHttpContextAccessor();
 

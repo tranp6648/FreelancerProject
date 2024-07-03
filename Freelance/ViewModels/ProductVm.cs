@@ -21,6 +21,7 @@
         public string Description { get; set; }
         public int StarRating { get; set; }
         public int StockQuantity { get; set; }
+       
 
     }
 }
