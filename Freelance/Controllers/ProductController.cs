@@ -9,6 +9,7 @@ using System;
 using PhinaMart.Services;
 using PhinaMart.Helpers;
 using System.Xml.Linq;
+using System.Linq;
 
 namespace PhinaMart.Controllers
 {
@@ -77,6 +78,7 @@ namespace PhinaMart.Controllers
             var Comment = db.Comments.Where(d=>d.ProductId==id).Select(d => new
             {
                 Id=d.Id,
+               
                 User=d.User.Username,
                 CreateDate=d.CreatedAt,
                 ContenText=d.CommentText
@@ -101,6 +103,38 @@ namespace PhinaMart.Controllers
             ViewBag.Email = email;  
 
             return View(viewModel);
+        }
+        [HttpPost]
+        [Route("CreateComp/{id}")]
+        public IActionResult CreateComp(int id)
+        {
+            
+            var idUser=int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var total = db.Compares.Where(d => d.IdUser == idUser && d.IdProduct == id).Count();
+            if (total >= 4)
+            {
+                TempData["Exist"] = "There are 4 products in compare";
+                return RedirectToAction("Detail", new { id = id });
+            }
+            if (db.Compares.Any(d => d.IdUser == idUser && d.IdProduct == id))
+            {
+                TempData["Exist"] = "this Product is already exists in Compare";
+                return RedirectToAction("Detail", new { id = id });
+            }
+            var result = commentService.CreateCompare(id);
+            if (result)
+            {
+                TempData["Success"] = "Compare Created Successfully";
+                return RedirectToAction("Index", "Product");
+            }
+            else
+            {
+
+
+                TempData["Error"] = "Failed to create comment";
+                return RedirectToAction("Index", "Product");
+            }
+            return RedirectToAction("Index", "Product");
         }
         [HttpPost]
         [Route("CreateCompare/{id}")]
@@ -128,11 +162,17 @@ namespace PhinaMart.Controllers
             }
             return RedirectToAction("Detail", new { id = id });
         }
+        
         [HttpPost]
         [Route("CreateComment/{id}")]
         [ValidateAntiForgeryToken]
         public IActionResult CreateComment(int id,CreateComment createComment)
         {
+            var idUser = (User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (idUser == null)
+            {
+                return RedirectToAction("Login","User");
+            }
             var result = commentService.CreateComment(createComment, id);
             if (result)
             {

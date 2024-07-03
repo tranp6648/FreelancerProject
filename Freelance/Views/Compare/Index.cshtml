@@ -1,4 +1,6 @@
-﻿@{
+﻿@model PhinaMart.ViewModels.ProductDetailAndCommentViewModel
+@using System.Security.Claims
+@{
     ViewData["Title"] = "Compare";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -15,45 +17,59 @@
         <div class="compare-table">
             <div class="compare-row cols-xl-5 cols-lg-4 cols-md-3 cols-2 compare-products">
                 <div class="compare-col compare-field">Product</div>
-                @foreach (var Compare in ViewBag.Compares){
-                    <div class="compare-col compare-product">
-                        <a href="#" class="btn remove-product"><i class="w-icon-times-solid"></i></a>
-                        <div class="product text-center">
-                            <figure class="product-media">
-                                <a href="product-default.html">
-                                    <img src="~/media/products/@Compare.Url" alt="Product" width="228"
-                                         height="257" />
-                                </a>
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-cart w-icon-cart"></a>
-                                    <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"></a>
-                                </div>
-                            </figure>
-                            <div class="product-details">
-                                <h3 class="product-name">
+                @if (ViewBag.Compares.Count > 0)
+                {
+                    @foreach (var Compare in ViewBag.Compares)
+                    {
+                        <div class="compare-col compare-product">
+                            <form asp-action="DeleteCompare" method="post" asp-route-id="@Compare.IdProduct">
+
+                                <button type="submit" class="btn remove-product"><i class="w-icon-times-solid"></i></button>
+                            </form>
+
+                            <div class="product text-center">
+                                <figure class="product-media">
                                     <a href="product-default.html">
-                                        Electronics Black Wrist
-                                        Watch
+                                        <img src="~/media/products/@Compare.Url" alt="Product" width="228"
+                                             height="257" />
                                     </a>
-                                </h3>
+                                    <div class="product-action-vertical">
+                                        <a href="#" class="btn-product-icon btn-cart w-icon-cart"></a>
+                                        <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"></a>
+                                    </div>
+                                </figure>
+                                <div class="product-details">
+                                    <h3 class="product-name">
+                                        <a href="product-default.html">
+                                            Electronics Black Wrist
+                                            Watch
+                                        </a>
+                                    </h3>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
+
+
                 }
-               
-               
+          
             </div>
             <!-- End of Compare Products -->
             <div class="compare-row cols-xl-5 cols-lg-4 cols-md-3 cols-2 compare-price">
                 <div class="compare-col compare-field">Price</div>
-                @foreach(var Compare in ViewBag.Compares){
-                    <div class="compare-col compare-value">
-                        <div class="product-price">
-                            <span class="new-price">$@Compare.Price</span>
+                @if (ViewBag.Compares.Count>0)
+                {
+                    @foreach (var Compare in ViewBag.Compares)
+                    {
+                        <div class="compare-col compare-value">
+                            <div class="product-price">
+                                <span class="new-price">$@Compare.Price</span>
+                            </div>
                         </div>
-                    </div>
+                    }
+
                 }
-               
+              
                 
             </div>
             <!-- End of Compare Price -->
@@ -69,32 +85,17 @@
                 <div class="compare-col compare-field">description</div>
                 <div class="compare-col compare-value">
                     <ul class="list-style-none list-type-check">
-                        <li>Ultrices eros in cursus turpis massa cursus mattis.</li>
-                        <li>Volutpat ac tincidunt vitae semper quis lectus.</li>
-                        <li>Aliquam id diam maecenas ultricies mi eget mauris.</li>
+                        @if (ViewBag.Compares.Count > 0)
+                        {
+                            @foreach (var compare in ViewBag.compares)
+                            {
+                                <li>@compare.Description</li>
+                            }
+                        }
+                       
                     </ul>
                 </div>
-                <div class="compare-col compare-value">
-                    <ul class="list-style-none list-type-check">
-                        <li>Ultrices eros in cursus turpis massa cursus mattis.</li>
-                        <li>Volutpat ac tincidunt vitae semper quis lectus.</li>
-                        <li>Aliquam id diam maecenas ultricies mi eget mauris.</li>
-                    </ul>
-                </div>
-                <div class="compare-col compare-value">
-                    <ul class="list-style-none list-type-check">
-                        <li>Ultrices eros in cursus turpis massa cursus mattis.</li>
-                        <li>Volutpat ac tincidunt vitae semper quis lectus.</li>
-                        <li>Aliquam id diam maecenas ultricies mi eget mauris.</li>
-                    </ul>
-                </div>
-                <div class="compare-col compare-value">
-                    <ul class="list-style-none list-type-check">
-                        <li>Ultrices eros in cursus turpis massa cursus mattis.</li>
-                        <li>Volutpat ac tincidunt vitae semper quis lectus.</li>
-                        <li>Aliquam id diam maecenas ultricies mi eget mauris.</li>
-                    </ul>
-                </div>
+                
             </div>
             <!-- End of Compare Description -->
             <div class="compare-row cols-xl-5 cols-lg-4 cols-md-3 cols-2 compare-reviews">
@@ -139,9 +140,14 @@
             <!-- End of Compare Reviews -->
             <div class="compare-row cols-xl-5 cols-lg-4 cols-md-3 cols-2 compare-category">
                 <div class="compare-col compare-field">Category</div>
-                @foreach(var Compare in ViewBag.Compares){
-                    <div class="compare-col compare-value">@Compare.Category</div>
+                @if (ViewBag.Compares.Count > 0)
+                {
+                    @foreach (var Compare in ViewBag.Compares)
+                    {
+                        <div class="compare-col compare-value">@Compare.Category</div>
+                    }
                 }
+                
                 
               
             </div>
@@ -192,9 +198,14 @@
             <!-- End of Compare Size -->
             <div class="compare-row cols-xl-5 cols-lg-4 cols-md-3 cols-2 compare-brand">
                 <div class="compare-col compare-field">Brand</div>
-                @foreach(var Compare in ViewBag.Compares){
-                    <div class="compare-col compare-value">@Compare.Brand</div>
+                @if (ViewBag.Compares.Count > 0)
+                {
+                    @foreach (var Compare in ViewBag.Compares)
+                    {
+                        <div class="compare-col compare-value">@Compare.Brand</div>
+                    }
                 }
+               
                 
             </div>
             <!-- End of Compare Brand -->

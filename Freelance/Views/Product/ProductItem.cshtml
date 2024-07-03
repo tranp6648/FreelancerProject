@@ -1,4 +1,8 @@
 ﻿@model IEnumerable<PhinaMart.ViewModels.ProductVm>
+@{
+    ViewData["Title"] = "Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <!-- End of Breadcrumb -->
 <h4> <b> @Model.Count() </b>product </h4>
@@ -27,9 +31,14 @@
                             <a href="javascript:void(0);" class="btn-product-icon btn-wishlist w-icon-heart"
                                title="Wishlist" onclick="alert('You need to log in to add products to your wishlist.')"></a>
                         }
-
-                        <a href="#" class="btn-product-icon btn-compare w-icon-compare"
-                           title="Compare"></a>
+                        <form asp-action="CreateComp" asp-controller="Product" asp-route-id="@item.Id" method="post">
+                            <button type="submit"
+                                    style="font-size:21px;color:black;margin-top:0px;border:none;background-color:transparent"
+                                    class="btn-icon-left w-icon-compare">
+                                <span></span>
+                            </button>
+                        </form>
+                       
                         <a href="#" class="btn-product-icon btn-quickview w-icon-search"
                            title="Quick View"></a>
                     </div>
@@ -60,6 +69,51 @@
 </div>
 <!-- End of Page Content -->
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+        @if (TempData["Message"] != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: '@TempData["Message"]',
+                    });
+            </text>
+        }
+        @if (TempData["Success"] != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: '@TempData["Success"]',
+                    });
+            </text>
+        }
+        @if (TempData["Exist"] != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '@TempData["Exist"]',
+                    });
+            </text>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '@TempData["Error"]',
+                    });
+            </text>
+        }
+                                                });
+    </script>
     <script>
         $(document).ready(function () {
             $('.btn-wishlist').click(function () {
@@ -82,5 +136,7 @@
                 });
             });
         });
+     
+
     </script>
 }

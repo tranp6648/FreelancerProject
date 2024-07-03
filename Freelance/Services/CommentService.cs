@@ -6,5 +6,6 @@ namespace PhinaMart.Services
     {
         public bool CreateComment(CreateComment createComment,int id);
         public bool CreateCompare(int id);
+        public bool DeleteCompare(int id);
     }
 }
