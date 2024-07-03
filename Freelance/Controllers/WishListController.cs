@@ -48,22 +48,41 @@ namespace PhinaMart.Controllers
 
             return View(wishListItems);
         }
-
         [HttpPost]
-        [Route("AddToWishList/{id}")]
-        [ValidateAntiForgeryToken]
-        public IActionResult AddToWishList(int idProduct,int id )
+        [Route("AddWishList/{id}")]
+        public IActionResult AddWishList(int id)
         {
-            var result = wishlistService.AddToWishList(idProduct,id);
+            var result=wishlistService.AddToWishList(id);
             if (result)
             {
                 TempData["Message"] = "wishlist add successfully";
+                return RedirectToAction("Index", "Product");
             }
             else
             {
                 TempData["Error"] = "Failed to add wishlist";
+                return RedirectToAction("Index", "Product");
+              
             }
-            return RedirectToAction("ProductItem", new { id = id });
+          
+        }
+        [HttpPost]
+        [Route("AddToWishList/{id}")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddToWishList(int id )
+        {
+            var result = wishlistService.AddToWishList(id);
+            if (result)
+            {
+                TempData["Message"] = "wishlist add successfully";
+                return RedirectToAction("Detail", "Product", new { id = id });
+            }
+            else
+            {
+                TempData["Error"] = "Failed to add wishlist";
+                return RedirectToAction("Detail", "Product", new { id = id });
+            }
+         
         }
 
         [HttpPost]

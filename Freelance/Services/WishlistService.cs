@@ -4,6 +4,6 @@ namespace PhinaMart.Services
 {
     public interface WishlistService
     {
-        public bool AddToWishList(int idProduct,int id);
+        public bool AddToWishList(int idProduct);
     }
 }

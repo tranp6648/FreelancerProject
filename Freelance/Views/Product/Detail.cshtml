@@ -229,8 +229,11 @@
                                 <span class="divider d-xs-show"></span>
                                 
                                 <div class="product-link-wrapper d-flex">
-                                    <a href="#"
-                                       class="btn-product-icon btn-wishlist w-icon-heart"><span></span></a>
+                                    <form asp-action="AddToWishList" asp-controller="WishList" asp-route-id="@Model.ProductDetail.Id" method="post">
+                                        <button type="submit" style="font-size:26px;color:black;margin-top:3px;border:none;background-color:transparent"
+                                           class=" w-icon-heart" ><span></span></button>
+                                    </form>
+                                    
                                     <form asp-action="CreateCompare" asp-controller="Product" asp-route-id="@Model.ProductDetail.Id" method="post">
                                             <button type="submit" 
                                      style="font-size:26px;color:black;margin-top:3px;border:none;background-color:transparent"
@@ -813,6 +816,7 @@
                                     <div class="product-action-vertical">
                                         <a href="#" class="btn-product-icon btn-cart w-icon-cart"
                                            title="Add to cart"></a>
+
                                         <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"
                                            title="Add to wishlist"></a>
                                         <a href="#" class="btn-product-icon btn-compare w-icon-compare"

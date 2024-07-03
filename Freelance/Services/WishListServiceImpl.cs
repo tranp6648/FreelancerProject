@@ -16,18 +16,24 @@ namespace PhinaMart.Services
             _contextAccessor = contextAccessor;
             _phinaMartContext = phinaMartContext;
         }
-
-        public bool AddToWishList(int userId, int productId)
+        
+        public bool AddToWishList( int productId)
         {
             using (var transaction = _phinaMartContext.Database.BeginTransaction())
             {
                 try
                 {
-                    if (!_phinaMartContext.WishLists.Any(w => w.UserId == userId && w.ProductId == productId))
+                    var Id = _contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+                    if (Id == null)
+                    {
+                        throw new Exception("User ID claim not found");
+                    }
+                    var UserId = int.Parse(Id.Value);
+                    if (!_phinaMartContext.WishLists.Any(w => w.UserId == UserId && w.ProductId == productId))
                     {
                         var wishlist = new WishList
                         {
-                            UserId = userId,
+                            UserId = UserId,
                             ProductId = productId,
                             SelectDate = DateTime.Now
                         };

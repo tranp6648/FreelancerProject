@@ -81,21 +81,15 @@ namespace PhinaMart.Controllers
             var averageStars = averageRating / 20.0;
             var comments = db.Comments.Where(d => d.ProductId == id).Select(d => new
             {
-<<<<<<< HEAD
+
                 Id=d.Id,
                
                 User=d.User.Username,
                 CreateDate=d.CreatedAt,
                 ContenText=d.CommentText
             }).OrderByDescending(d=>d.Id).ToList();
-            ViewBag.Comments =Comment;
-=======
-                Id = d.Id,
-                User = d.User.Username,
-                CreateDate = d.CreatedAt,
-                ContenText = d.CommentText,
+        
 
-            }).OrderByDescending(d => d.Id).ToList();
 
             ViewBag.Comments = comments;
             ViewBag.AverageRating = averageRating;  // Add this line
@@ -131,8 +125,6 @@ namespace PhinaMart.Controllers
             {
                 starPercentages[i] = (starCounts[i] * 100.0) / totalRatings;
             }
-
->>>>>>> 0d58d4c1f5ca98968aae8a34be76e227ed1379b1
             var viewModel = new ProductDetailAndCommentViewModel
             {
                 ProductDetail = new DetailProductVm
@@ -176,12 +168,12 @@ namespace PhinaMart.Controllers
             if (total >= 4)
             {
                 TempData["Exist"] = "There are 4 products in compare";
-                return RedirectToAction("Detail", new { id = id });
+                return RedirectToAction("Index", "Product");
             }
             if (db.Compares.Any(d => d.IdUser == idUser && d.IdProduct == id))
             {
                 TempData["Exist"] = "this Product is already exists in Compare";
-                return RedirectToAction("Detail", new { id = id });
+                return RedirectToAction("Index", "Product");
             }
             var result = commentService.CreateCompare(id);
             if (result)
@@ -196,7 +188,7 @@ namespace PhinaMart.Controllers
                 TempData["Error"] = "Failed to create comment";
                 return RedirectToAction("Index", "Product");
             }
-            return RedirectToAction("Index", "Product");
+          
         }
         [HttpPost]
         [Route("CreateCompare/{id}")]
@@ -230,16 +222,15 @@ namespace PhinaMart.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateComment(int id,CreateComment createComment,CreateRating createRating)
         {
-<<<<<<< HEAD
+
             var idUser = (User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             if (idUser == null)
             {
                 return RedirectToAction("Login","User");
             }
-            var result = commentService.CreateComment(createComment, id);
-=======
+            
             var result = commentService.CreateComment(createComment,createRating, id);
->>>>>>> 0d58d4c1f5ca98968aae8a34be76e227ed1379b1
+
             if (result)
             {
                 TempData["Message"] = "Comment created successfully";

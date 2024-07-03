@@ -1396,6 +1396,64 @@
         }
     </script>
 
+    @section Scripts {
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function () {
+            @if (TempData["Message"] != null)
+            {
+                <text>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: '@TempData["Message"]',
+                        });
+                </text>
+            }
+            @if (TempData["Success"] != null)
+            {
+                <text>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: '@TempData["Success"]',
+                        });
+                </text>
+            }
+            @if (TempData["Exist"] != null)
+            {
+                <text>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: '@TempData["Exist"]',
+                        });
+                </text>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <text>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: '@TempData["Error"]',
+                        });
+                </text>
+            }
+                            });
+            function updateStars(rating) {
+                var stars = document.querySelectorAll('.rating-stars a');
+                stars.forEach(function (star, index) {
+                    if (index < rating) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+            }
+        </script>
+
+    }
 
    @*  <script>
     $(document).ready(function() {

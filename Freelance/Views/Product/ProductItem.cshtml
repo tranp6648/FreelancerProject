@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<PhinaMart.ViewModels.ProductVm>
 @{
     ViewData["Title"] = "Product";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+   
 }
 
 <!-- End of Breadcrumb -->
@@ -23,9 +23,9 @@
 
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <form asp-action="AddToWishList" asp-controller="WishList" asp-route-id="@item.Id" method="post" style="display:inline;">
+                            <form asp-action="AddWishList" asp-controller="WishList" asp-route-id="@item.Id" method="post" style="display:inline;">
                                 <input type="hidden" name="productId" value="@item.Id" />
-                                <button type="submit" class="btn-product-icon btn-wishlist w-icon-heart" title="Wishlist"></button>
+                                <button type="submit" style="font-size:21px;color:black;margin-top:0px;border:none;background-color:transparent" class="  w-icon-heart" title="Wishlist"></button>
                             </form>
                         }
                         else
@@ -70,79 +70,6 @@
     }
 </div>
 <!-- End of Page Content -->
-<<<<<<< HEAD
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function () {
-        @if (TempData["Message"] != null)
-        {
-            <text>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: '@TempData["Message"]',
-                    });
-            </text>
-        }
-        @if (TempData["Success"] != null)
-        {
-            <text>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: '@TempData["Success"]',
-                    });
-            </text>
-        }
-        @if (TempData["Exist"] != null)
-        {
-            <text>
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: '@TempData["Exist"]',
-                    });
-            </text>
-        }
-        @if (TempData["Error"] != null)
-        {
-            <text>
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: '@TempData["Error"]',
-                    });
-            </text>
-        }
-                                                });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('.btn-wishlist').click(function () {
-                var productId = $(this).data('product-id');
-                console.log('Wishlist button clicked, productId:', productId); // Add this line to check if the event is triggered
-                $.ajax({
-                    url: '@Url.Action("AddToWishList", "WishList")',
-                    type: 'POST',
-                    data: { productId: productId },
-                    success: function (response) {
-                        if (response.success) {
-                            alert('Product added to wishlist.');
-                        } else {
-                            alert(response.message);
-                        }
-                    },
-                    error: function () {
-                        alert('An error occurred. Please try again.');
-                    }
-                });
-            });
-        });
-     
+<!-- End of Page Content -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    </script>
-}
-=======
-
->>>>>>> 0d58d4c1f5ca98968aae8a34be76e227ed1379b1
