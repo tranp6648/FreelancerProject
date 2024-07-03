@@ -314,83 +314,40 @@
                                 <div class="col-xl-4 col-lg-5 mb-4">
                                     <div class="ratings-wrapper">
                                         <div class="avg-rating-container">
-                                            <h4 class="avg-mark font-weight-bolder ls-50">3.3</h4>
+                                            <h4 class="avg-mark font-weight-bolder ls-50">@Model.DisplayRating.AverageStars.ToString("F1")</h4>
                                             <div class="avg-rating">
-                                                <p class="text-dark mb-1">Average Rating</p>
+                                                <p class="text-dark mb-1"></p>
                                                 <div class="ratings-container">
                                                     <div class="ratings-full">
-                                                        <span class="ratings" style="width: 60%;"></span>
+                                                        <span class="ratings" style="width: @Model.DisplayRating.AverageRating.ToString("F1")%;"></span>
+
                                                         <span class="tooltiptext tooltip-top"></span>
                                                     </div>
-                                                    <a href="#" class="rating-reviews">(3 Reviews)</a>
+                                                    <a href="#" class="rating-reviews">(@Model.DisplayRating.TotalRatings Reviews)</a>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="ratings-value d-flex align-items-center text-dark ls-25">
-                                            <span class="text-dark font-weight-bold">66.7%</span>Recommended<span class="count">(2 of 3)</span>
+                                            <span class="text-dark font-weight-bold">@Model.DisplayRating.AverageRating.ToString("F1") %</span>Recommended<span class="count">(2 of 3)</span>
                                         </div>
                                         <div class="ratings-list">
-                                            <div class="ratings-container">
-                                                <div class="ratings-full">
-                                                    <span class="ratings" style="width: 100%;"></span>
-                                                    <span class="tooltiptext tooltip-top"></span>
+                                            @for (int i = 5; i >= 1; i--)
+                                            {
+                                                <div class="ratings-container">
+                                                    <div class="ratings-full">
+                                                        <span class="ratings" style="width: @(i * 20)%"></span>
+                                                        <span class="tooltiptext tooltip-top">@i stars</span>
+                                                    </div>
+                                                    <div class="progress-bar progress-bar-sm">
+                                                        <span style="width: @Model.DisplayRating.StarPercentages[i - 1]%"></span>
+                                                    </div>
+                                                    <div class="progress-value">
+                                                        <mark>@Model.DisplayRating.StarPercentages[i - 1].ToString("F1")%</mark>
+                                                    </div>
                                                 </div>
-                                                <div class="progress-bar progress-bar-sm ">
-                                                    <span></span>
-                                                </div>
-                                                <div class="progress-value">
-                                                    <mark>70%</mark>
-                                                </div>
-                                            </div>
-                                            <div class="ratings-container">
-                                                <div class="ratings-full">
-                                                    <span class="ratings" style="width: 80%;"></span>
-                                                    <span class="tooltiptext tooltip-top"></span>
-                                                </div>
-                                                <div class="progress-bar progress-bar-sm ">
-                                                    <span></span>
-                                                </div>
-                                                <div class="progress-value">
-                                                    <mark>30%</mark>
-                                                </div>
-                                            </div>
-                                            <div class="ratings-container">
-                                                <div class="ratings-full">
-                                                    <span class="ratings" style="width: 60%;"></span>
-                                                    <span class="tooltiptext tooltip-top"></span>
-                                                </div>
-                                                <div class="progress-bar progress-bar-sm ">
-                                                    <span></span>
-                                                </div>
-                                                <div class="progress-value">
-                                                    <mark>40%</mark>
-                                                </div>
-                                            </div>
-                                            <div class="ratings-container">
-                                                <div class="ratings-full">
-                                                    <span class="ratings" style="width: 40%;"></span>
-                                                    <span class="tooltiptext tooltip-top"></span>
-                                                </div>
-                                                <div class="progress-bar progress-bar-sm ">
-                                                    <span></span>
-                                                </div>
-                                                <div class="progress-value">
-                                                    <mark>0%</mark>
-                                                </div>
-                                            </div>
-                                            <div class="ratings-container">
-                                                <div class="ratings-full">
-                                                    <span class="ratings" style="width: 20%;"></span>
-                                                    <span class="tooltiptext tooltip-top"></span>
-                                                </div>
-                                                <div class="progress-bar progress-bar-sm ">
-                                                    <span></span>
-                                                </div>
-                                                <div class="progress-value">
-                                                    <mark>0%</mark>
-                                                </div>
-                                            </div>
+                                            }
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="col-xl-8 col-lg-7 mb-4">
@@ -401,22 +358,21 @@
                                         @* form danh gia *@
                                         <form asp-action="CreateComment" class="review-form" asp-controller="Product" asp-route-id="@Model.ProductDetail.Id" method="post">
                                             <div class="rating-form">
+                                                
                                                 <label for="rating">Your Rating Of This Product :</label>
                                                 <span class="rating-stars">
-                                                    <a class="star-1" href="#">1</a>
-                                                    <a class="star-2" href="#">2</a>
-                                                    <a class="star-3" href="#">3</a>
-                                                    <a class="star-4" href="#">4</a>
-                                                    <a class="star-5" href="#">5</a>
+                                                    @for (int i = 1; i <= 5; i++)
+                                                    {
+                                                        <a class="star-@i" href="#" onclick="event.preventDefault(); document.getElementById('rating').value = '@i'; updateStars(@i);">@i</a>
+
+                                                    }
                                                 </span>
-                                                <select id="rating"
-                                                        style="display: none;">
+                                                <select id="rating" name="CreateRating.Score" style="display: none;">
                                                     <option value="">Rate…</option>
-                                                    <option value="5">Perfect</option>
-                                                    <option value="4">Good</option>
-                                                    <option value="3">Average</option>
-                                                    <option value="2">Not that bad</option>
-                                                    <option value="1">Very poor</option>
+                                                    @for (int i = 1; i <= 5; i++)
+                                                    {
+                                                        <option value="@i">@i</option>
+                                                    }
                                                 </select>
                                             </div>
                                             <textarea cols="30" rows="6"
@@ -487,7 +443,7 @@
                                                                 <div class="ratings-container comment-rating">
                                                                     <div class="ratings-full">
                                                                         <span class="ratings"
-                                                                              style="width: 60%;"></span>
+                                                                          style="width:  @ViewBag.AverageRating%;"></span>
                                                                         <span class="tooltiptext tooltip-top"></span>
                                                                     </div>
                                                                 </div>
@@ -1449,7 +1405,17 @@
                     });
             </text>
         }
-                                        });
+        });
+        function updateStars(rating) {
+            var stars = document.querySelectorAll('.rating-stars a');
+            stars.forEach(function (star, index) {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
     </script>
     
 }

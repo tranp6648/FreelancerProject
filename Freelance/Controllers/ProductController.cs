@@ -10,6 +10,7 @@ using PhinaMart.Services;
 using PhinaMart.Helpers;
 using System.Xml.Linq;
 
+
 namespace PhinaMart.Controllers
 {
     public class ProductController : Controller
@@ -74,14 +75,53 @@ namespace PhinaMart.Controllers
                 TempData["error"] = $"{id}";
                 return Redirect("/404");
             }
-            var Comment = db.Comments.Where(d=>d.ProductId==id).Select(d => new
+            var totalRatings = db.Ratings.Count(r => r.IdProduct == id);
+            var averageRating = totalRatings > 0 ? db.Ratings.Where(r => r.IdProduct == id).Average(r => r.Score) : 0;
+            var averageStars = averageRating / 20.0;
+            var comments = db.Comments.Where(d => d.ProductId == id).Select(d => new
             {
-                Id=d.Id,
-                User=d.User.Username,
-                CreateDate=d.CreatedAt,
-                ContenText=d.CommentText
-            }).OrderByDescending(d=>d.Id).ToList();
-            ViewBag.Comments =Comment;
+                Id = d.Id,
+                User = d.User.Username,
+                CreateDate = d.CreatedAt,
+                ContenText = d.CommentText,
+
+            }).OrderByDescending(d => d.Id).ToList();
+
+            ViewBag.Comments = comments;
+            ViewBag.AverageRating = averageRating;  // Add this line
+
+            var starCounts = new int[5];
+            if (totalRatings > 0)
+            {
+                var groupedRatings = db.Ratings
+                    .Where(r => r.IdProduct == id)
+                    .GroupBy(r => r.Score / 20)
+                    .Select(g => new { Stars = g.Key, Count = g.Count() })
+                    .ToList();
+
+                foreach (var group in groupedRatings)
+                {
+                    if (group.Stars < 1)
+                    {
+                        starCounts[0] = group.Count; 
+                    }
+                    else if (group.Stars >= 5)
+                    {
+                        starCounts[4] = group.Count;
+                    }
+                    else
+                    {
+                        starCounts[group.Stars - 1] = group.Count; 
+                    }
+                }
+            }
+
+            var starPercentages = new double[5];
+            for (int i = 0; i < starCounts.Length; i++)
+            {
+                starPercentages[i] = (starCounts[i] * 100.0) / totalRatings;
+            }
+
             var viewModel = new ProductDetailAndCommentViewModel
             {
                 ProductDetail = new DetailProductVm
@@ -95,13 +135,26 @@ namespace PhinaMart.Controllers
                     NameCategory = data.Category.Name,
                     StockQuantity = 10, // Placeholder
                     StarRating = 5, // Placeholder
+                },
+                NewComment = new CreateComment(),
+                Score = new CreateRating(),
+                DisplayRating = new DisplayRating
+                {
+                    TotalRatings = totalRatings,
+                    AverageStars = averageStars,
+                    AverageRating = averageRating,
+                    StarPercentages = starPercentages
                 }
-            }; 
-            var email=User.FindFirst(ClaimTypes.Email)?.Value;
-            ViewBag.Email = email;  
+            };
+
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            ViewBag.Email = email;
 
             return View(viewModel);
         }
+
+
+
         [HttpPost]
         [Route("CreateCompare/{id}")]
           [ValidateAntiForgeryToken]
@@ -131,9 +184,9 @@ namespace PhinaMart.Controllers
         [HttpPost]
         [Route("CreateComment/{id}")]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateComment(int id,CreateComment createComment)
+        public IActionResult CreateComment(int id,CreateComment createComment,CreateRating createRating)
         {
-            var result = commentService.CreateComment(createComment, id);
+            var result = commentService.CreateComment(createComment,createRating, id);
             if (result)
             {
                 TempData["Message"] = "Comment created successfully";

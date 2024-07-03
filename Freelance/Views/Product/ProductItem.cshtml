@@ -19,8 +19,10 @@
 
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <a href="javascript:void(0);" class="btn-product-icon btn-wishlist w-icon-heart"
-                               title="Wishlist" data-product-id="@item.Id"></a>
+                            <form asp-action="AddToWishList" asp-controller="WishList" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                <input type="hidden" name="productId" value="@item.Id" />
+                                <button type="submit" class="btn-product-icon btn-wishlist w-icon-heart" title="Wishlist"></button>
+                            </form>
                         }
                         else
                         {
@@ -59,28 +61,4 @@
     }
 </div>
 <!-- End of Page Content -->
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('.btn-wishlist').click(function () {
-                var productId = $(this).data('product-id');
-                console.log('Wishlist button clicked, productId:', productId); // Add this line to check if the event is triggered
-                $.ajax({
-                    url: '@Url.Action("AddToWishList", "WishList")',
-                    type: 'POST',
-                    data: { productId: productId },
-                    success: function (response) {
-                        if (response.success) {
-                            alert('Product added to wishlist.');
-                        } else {
-                            alert(response.message);
-                        }
-                    },
-                    error: function () {
-                        alert('An error occurred. Please try again.');
-                    }
-                });
-            });
-        });
-    </script>
-}
+

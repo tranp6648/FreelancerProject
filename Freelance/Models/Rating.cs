@@ -13,6 +13,8 @@ public partial class Rating
 
     public DateTime CreateDate { get; set; }
 
+    public int Score { get; set; }
+
     public virtual Product IdProductNavigation { get; set; } = null!;
 
     public virtual User IdUserNavigation { get; set; } = null!;
