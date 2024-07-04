@@ -28,7 +28,10 @@ public class CommentServiceImpl : CommentService
                     throw new Exception("User ID claim not found");
                 }
                 var UserId = int.Parse(Id.Value);
-
+                if (_phinaMartContext.Ratings.Any(c => c.IdUser == UserId && c.IdProduct == id))
+                {
+                    throw new Exception("this customer was rating already");
+                }
                 // Create Comment
                 var comment = new Comment
                 {
@@ -39,7 +42,7 @@ public class CommentServiceImpl : CommentService
                 };
                 _phinaMartContext.Comments.Add(comment);
 
-                
+               
                 var rating = new Rating
                 {
                     IdUser = UserId,
