@@ -26,6 +26,7 @@ namespace PhinaMart.Controllers
         public IActionResult Index(int? category)
         {
             var products = db.Products.AsQueryable();
+            
             if (category.HasValue)
             {
                 products = products.Where(p => p.CategoryId == category.Value);
@@ -38,8 +39,12 @@ namespace PhinaMart.Controllers
                 Price = p.Price,
                 Image = p.Image ?? "",
                 DescriptionShort = p.DescriptionUnit ?? string.Empty,
-                NameCategory = p.Category.Name
-            });
+                NameCategory = p.Category.Name,
+                Quantity = p.Quantity ?? 0,
+                AverageRating = db.Ratings.Where(r => r.IdProduct == p.Id).Average(r => (double?)r.Score) ?? 0,
+                TotalRatings = db.Ratings.Count(r => r.IdProduct == p.Id)
+
+        });
 
             return View(result);
         }
@@ -81,18 +86,19 @@ namespace PhinaMart.Controllers
             var averageStars = averageRating / 20.0;
             var comments = db.Comments.Where(d => d.ProductId == id).Select(d => new
             {
-
-                Id=d.Id,
-               
-                User=d.User.Username,
-                CreateDate=d.CreatedAt,
-                ContenText=d.CommentText
-            }).OrderByDescending(d=>d.Id).ToList();
-        
-
+                Id = d.Id,
+                User = d.User.Username,
+                CreateDate = d.CreatedAt,
+                ContenText = d.CommentText,
+                PersonalRating = db.Ratings
+                .Where(r => r.IdProduct == id && r.IdUser == d.UserId)
+                .Select(r => r.Score)
+                .FirstOrDefault()
+            }).OrderByDescending(d => d.Id).ToList();
 
             ViewBag.Comments = comments;
-            ViewBag.AverageRating = averageRating;  // Add this line
+            ViewBag.AverageRating = averageRating;
+            ViewBag.countRating = totalRatings;
 
             var starCounts = new int[5];
             if (totalRatings > 0)
@@ -107,7 +113,7 @@ namespace PhinaMart.Controllers
                 {
                     if (group.Stars < 1)
                     {
-                        starCounts[0] = group.Count; 
+                        starCounts[0] = group.Count;
                     }
                     else if (group.Stars >= 5)
                     {
@@ -115,7 +121,7 @@ namespace PhinaMart.Controllers
                     }
                     else
                     {
-                        starCounts[group.Stars - 1] = group.Count; 
+                        starCounts[group.Stars - 1] = group.Count;
                     }
                 }
             }
@@ -125,6 +131,17 @@ namespace PhinaMart.Controllers
             {
                 starPercentages[i] = (starCounts[i] * 100.0) / totalRatings;
             }
+
+            var averageRatingPersonal = db.Ratings
+                .Where(r => r.IdProduct == id)
+                .GroupBy(r => r.IdUser)
+                .Select(g => new PersonalRatingVm
+                {
+                    UserId = g.Key,
+                    AverageRating = g.Average(r => r.Score)
+                })
+                .ToList();
+
             var viewModel = new ProductDetailAndCommentViewModel
             {
                 ProductDetail = new DetailProductVm
@@ -138,6 +155,8 @@ namespace PhinaMart.Controllers
                     NameCategory = data.Category.Name,
                     StockQuantity = 10, // Placeholder
                     StarRating = 5, // Placeholder
+                    Quantity = data.Quantity ?? 0,
+                    PersonalRatings = averageRatingPersonal
                 },
                 NewComment = new CreateComment(),
                 Score = new CreateRating(),
@@ -241,6 +260,7 @@ namespace PhinaMart.Controllers
             }
             return RedirectToAction("Detail", new { id = id });
         }
+
 
     }
 }

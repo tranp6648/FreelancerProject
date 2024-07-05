@@ -41,6 +41,8 @@ public partial class Product
 
     public DateTime? UpdatedAt { get; set; }
 
+    public int? Quantity { get; set; }
+
     public virtual Brand? Brand { get; set; }
 
     public virtual Category? Category { get; set; }

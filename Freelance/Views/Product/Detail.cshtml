@@ -152,10 +152,9 @@
 
                             <div class="ratings-container">
                                 <div class="ratings-full">
-                                    <span class="ratings" style="width: 80%;"></span>
+                                    <span class="ratings" style="width: @ViewBag.AverageRating%;"></span>
                                     <span class="tooltiptext tooltip-top"></span>
                                 </div>
-                                <a href="#product-tab-reviews" class="rating-reviews">(3 Reviews)</a>
                             </div>
 
                             <div class="product-short-desc">
@@ -200,12 +199,16 @@
                                     <form asp-action="AddToCart" asp-controller="Cart" asp-route-id="@Model.ProductDetail.Id">
                                         <div class="product-qty-form">
                                             <div class="input-group">
-                                                <input class="quantity form-control" type="number" name="quantity" value="1" min="1">
+                                                <input class="quantity form-control" type="number" name="quantity" value="1" min="1" max="20" id="quantity-input">
                                                 <button type="button" class="quantity-plus w-icon-plus"></button>
                                                 <button type="button" class="quantity-minus w-icon-minus"></button>
                                             </div>
+                                            
+
                                         </div>
-                                        <button class="btn btn-primary ">
+                                        <div id="alert-message" style="color: red; display: none;">Số lượng không được vượt quá 20</div>
+                                        <button class="btn btn-primary" id="add-to-cart-btn"
+                                        @(Model.ProductDetail.Quantity == 0 ? "disabled" : "") style="@(Model.ProductDetail.Quantity == 0 ? "background-color: grey;" : "")">
                                             @* btn-cart *@
                                             <i class="w-icon-cart"></i>
                                             <span>Add to Cart</span>
@@ -446,7 +449,7 @@
                                                                 <div class="ratings-container comment-rating">
                                                                     <div class="ratings-full">
                                                                         <span class="ratings"
-                                                                          style="width:  @ViewBag.AverageRating%;"></span>
+                                                                          style="width:  @comment.PersonalRating%;"></span>
                                                                         <span class="tooltiptext tooltip-top"></span>
                                                                     </div>
                                                                 </div>
@@ -1420,6 +1423,42 @@
                 }
             });
         }
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const quantityInput = document.getElementById('quantity-input');
+            const alertMessage = document.getElementById('alert-message');
+            const plusButton = document.querySelector('.quantity-plus');
+            const minusButton = document.querySelector('.quantity-minus');
+
+            const updateQuantity = (value) => {
+                if (value > 20) {
+                    quantityInput.value = 20;
+                    alertMessage.style.display = 'block';
+                } else {
+                    alertMessage.style.display = 'none';
+                }
+            }
+
+            plusButton.addEventListener('click', () => {
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue < 20) {
+                    quantityInput.value = currentValue + 1;
+                }
+                updateQuantity(quantityInput.value);
+            });
+
+            minusButton.addEventListener('click', () => {
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
+                updateQuantity(quantityInput.value);
+            });
+
+            quantityInput.addEventListener('input', () => {
+                updateQuantity(quantityInput.value);
+            });
+        });
+
     </script>
     
 }
