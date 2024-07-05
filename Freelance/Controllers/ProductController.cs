@@ -23,6 +23,20 @@ namespace PhinaMart.Controllers
             db = context;
             this.commentService = commentService;
         }
+        [Route("FindFilter")]
+        public IActionResult FindFilter(decimal max,decimal min)
+        {
+            var result = db.Products.Where(d=>min>=d.Price && max<=d.Price).Select(p => new ProductVm
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                Image = p.Image ?? "",
+                DescriptionShort = p.DescriptionUnit ?? string.Empty,
+                NameCategory = p.Category.Name
+            }).ToList();
+            return View("Index",result);
+        }
         public IActionResult Index(int? category)
         {
             var products = db.Products.AsQueryable();
@@ -40,7 +54,7 @@ namespace PhinaMart.Controllers
                 DescriptionShort = p.DescriptionUnit ?? string.Empty,
                 NameCategory = p.Category.Name
             });
-
+           
             return View(result);
         }
 
@@ -163,40 +177,54 @@ namespace PhinaMart.Controllers
         public IActionResult CreateComp(int id)
         {
             
-            var idUser=int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var total = db.Compares.Where(d => d.IdUser == idUser && d.IdProduct == id).Count();
-            if (total >= 4)
+            var idUser=User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (idUser == null)
             {
-                TempData["Exist"] = "There are 4 products in compare";
-                return RedirectToAction("Index", "Product");
-            }
-            if (db.Compares.Any(d => d.IdUser == idUser && d.IdProduct == id))
-            {
-                TempData["Exist"] = "this Product is already exists in Compare";
-                return RedirectToAction("Index", "Product");
-            }
-            var result = commentService.CreateCompare(id);
-            if (result)
-            {
-                TempData["Success"] = "Compare Created Successfully";
-                return RedirectToAction("Index", "Product");
+
+                return RedirectToAction("Login", "User");
             }
             else
             {
+                var total = db.Compares.Where(d => d.IdUser == int.Parse(idUser) && d.IdProduct == id).Count();
+                if (total >= 4)
+                {
+                    TempData["Exist"] = "There are 4 products in compare";
+                    return RedirectToAction("Index", "Product");
+                }
+                if (db.Compares.Any(d => d.IdUser == int.Parse(idUser) && d.IdProduct == id))
+                {
+                    TempData["Exist"] = "this Product is already exists in Compare";
+                    return RedirectToAction("Index", "Product");
+                }
+                var result = commentService.CreateCompare(id);
+                if (result)
+                {
+                    TempData["Success"] = "Compare Created Successfully";
+                    return RedirectToAction("Index", "Product");
+                }
+                else
+                {
 
 
-                TempData["Error"] = "Failed to create comment";
-                return RedirectToAction("Index", "Product");
+                    TempData["Error"] = "Failed to create comment";
+                    return RedirectToAction("Index", "Product");
+                }
+
             }
-          
+
         }
         [HttpPost]
         [Route("CreateCompare/{id}")]
           [ValidateAntiForgeryToken]
         public IActionResult CreateCompare(int id)
         {
-            var idUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            if (db.Compares.Any(d => d.IdUser == idUser && d.IdProduct == id))
+            var idUser = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (idUser == null)
+            {
+
+                return RedirectToAction("Login", "User");
+            }
+            if (db.Compares.Any(d => d.IdUser ==int.Parse( idUser) && d.IdProduct == id))
             {
                 TempData["Exist"] = "this Product is already exists in Compare";
                 return RedirectToAction("Detail", new { id = id });

@@ -20,6 +20,4 @@ public partial class Comment
     public virtual ICollection<Reply> Replies { get; set; } = new List<Reply>();
 
     public virtual User? User { get; set; }
-    /*public double AverageRating { get; set; }*/
-
 }

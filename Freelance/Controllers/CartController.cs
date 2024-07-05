@@ -12,17 +12,21 @@ namespace PhinaMart.Controllers
         private readonly PhinaMartContext db;
         private readonly PaypalClient _paypalClient;
         private readonly IVnPayService _vnPayservice;
+       
 
         public CartController(PhinaMartContext context, PaypalClient paypalClient, IVnPayService vnPayservice)
         {
             db = context;
             _paypalClient = paypalClient;
             _vnPayservice = vnPayservice;
+         
         }
+
 
         public List<CartItem> Cart => HttpContext.Session.Get<List<CartItem>>(MySetting.CART_KEY) ?? new List<CartItem>();
         public IActionResult Index()
         {
+           
             return View(Cart);
         }
 
@@ -88,6 +92,63 @@ namespace PhinaMart.Controllers
             HttpContext.Session.Set(MySetting.CART_KEY, new List<CartItem>());
             return RedirectToAction("Index");
         }
+        [Route("SearchVoucher")]
+        [HttpPost]
+        public IActionResult SearchVoucher(string coupon_code)
+        {
+            try
+            {
+                var Current = DateOnly.FromDateTime(DateTime.Now);
+                // Find the voucher based on the coupon code
+                var voucher = db.Vouchers.FirstOrDefault(v => v.Code == coupon_code && Current>=v.StartDate && Current<=v.EndDate);
+                Console.WriteLine(voucher);
+                // Calculate the total order amount from the cart
+                float originalTotal = CalculateCartTotal();
+
+                // Apply discount if a valid voucher is found
+                if (voucher != null)
+                {
+                    float discountPercentage = voucher.DiscountPercentage;
+                    float discountAmount = originalTotal * (discountPercentage / 100);
+                    float finalTotal = originalTotal - discountAmount;
+
+                    ViewBag.DiscountAmount = discountAmount;
+                    ViewBag.DiscountPercentage = discountPercentage;
+                    ViewBag.Total = finalTotal;
+                }
+                else
+                {
+                    TempData["Error"] = "Voucher Is Not Exists";
+                    ViewBag.Total = originalTotal;
+                }
+
+                // Store PayPal client ID in ViewBag
+                ViewBag.PaypalClientId = _paypalClient.ClientId;
+
+                // Redirect to the Checkout action
+                return View("Checkout",Cart);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                // Optionally, set an error message in ViewBag or TempData to show in the view
+                ViewBag.ErrorMessage = "An error occurred while applying the voucher. Please try again.";
+
+                // Redirect to the cart page or handle the error as needed
+                return RedirectToAction("Cart");
+            }
+        }
+
+        private float CalculateCartTotal()
+        {
+            // Calculate total order amount from the cart items
+            float total = 0.0f;
+            foreach (var item in Cart)
+            {
+                total += (float)item.Price * item.Quantity;
+            }
+            return total;
+        }
 
         [Authorize]
         [HttpGet]
@@ -97,14 +158,20 @@ namespace PhinaMart.Controllers
             {
                 return Redirect("/");
             }
+        float total = 0.0f;
+            foreach (var item in Cart)
+            {
 
+                total += (float)item.Price * item.Quantity;
+            }
             ViewBag.PaypalClientdId = _paypalClient.ClientId;
+            ViewBag.Total = total;
             return View(Cart);
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult Checkout(CheckoutVM model, string payment = "COD")
+        public IActionResult Checkout(CheckoutVM model, string payment = "COD",decimal total=0.0m)
         {
             if (ModelState.IsValid)
             {
@@ -139,7 +206,7 @@ namespace PhinaMart.Controllers
                     HowToTransport = "GRAB",
                     Status = 0,
                     Note = model.Note,
-                    TotalAmount = Cart.Sum(item => item.IntoMoney) // Assuming you want to set the total amount
+                    TotalAmount = total // Assuming you want to set the total amount
                 };
 
                 using (var transaction = db.Database.BeginTransaction())

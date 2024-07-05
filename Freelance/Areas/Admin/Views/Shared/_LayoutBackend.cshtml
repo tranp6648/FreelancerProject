@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@model IEnumerable<dynamic>
+@using Newtonsoft.Json
+
+<!DOCTYPE html>
 <html lang="en" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="light" data-menu-styles="light" data-toggled="close">
 
 <head>
@@ -20,7 +23,8 @@
 
     <!-- Main Theme Js -->
     <script src="~/Backend/assets/js/main.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Bootstrap Css -->
     <link id="style" href="~/Backend/assets/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -2254,6 +2258,143 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // AJAX request to fetch data from API
+            $.ajax({
+                url: '/admin/Home/GetVenueByMonth', // Replace with your controller action URL
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+
+                    var months = [];
+                    var revenues = [];
+
+                    // Iterate through data to populate months and revenues arrays
+                    data.forEach(function (item) {
+                        console.log(item.month)
+                        var label = item.month + '/' + item.year;
+                        months.push(label);
+                        revenues.push(item.revenue);
+                    });
+
+                    // Create the chart data object
+                    var chartData = {
+                        labels: months, // Array of labels (Month/Year)
+                        datasets: [{
+                            label: 'Revenue',
+                            data: revenues, // Array of revenue data
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    };
+
+                    // Create the chart
+                    var ctx = document.getElementById('revenueChart').getContext('2d');
+                    var chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: chartData,
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Revenue'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Month/Year'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var myChart = null; // Initialize myChart variable
+
+            $('#viewBtn').click(function (event) {
+                event.preventDefault();
+
+                var selectedMonth = $('#month').val();
+                var url = '/admin/Home/MonthlyOrderChart/' + selectedMonth; // Adjusted URL path
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log('Order counts:', data);
+                        drawChart(data); // Call drawChart function with fetched data
+                    },
+                    error: function (error) {
+                        console.error('Error fetching data:', error);
+                    }
+                });
+            });
+
+            function drawChart(data) {
+                var ctx = document.getElementById('myChart').getContext('2d');
+
+                // Destroy existing chart if it exists
+                if (myChart !== null) {
+                    myChart.destroy();
+                }
+
+                // Prepare data for Chart.js
+                var chartData = {
+                    labels: [], // Array to hold day labels (e.g., 1, 2, ..., 31)
+                    datasets: [{
+                        label: 'Monthly Order Counts',
+                        data: [], // Array to hold daily order counts
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                };
+
+                // Assuming OrderData is an array of objects with orderDate and orderCount properties
+                data.forEach((orderCount) => {
+                    const orderDay = new Date(orderCount.orderDate).getDate();
+                    chartData.labels.push(orderDay); // Push day number to labels array
+                    chartData.datasets[0].data.push(orderCount.orderCount); // Push order count to data array
+                });
+
+                var options = {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                };
+
+                // Create new chart instance
+                myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: chartData,
+                    options: options
+                });
+            }
+        });
+
+
+
+    </script>
 
     <!-- Internal Datatables JS -->
     <script src="~/Backend/assets/js/datatables.js"></script>

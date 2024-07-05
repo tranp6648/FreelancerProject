@@ -40,18 +40,15 @@
         <div class="card overflow-hidden sales-card bg-primary-gradient">
             <div class="px-3 pt-3  pb-2 pt-0">
                 <div>
-                    <h6 class="mb-3 fs-12 text-fixed-white">TODAY ORDERS</h6>
+                    <h6 class="mb-3 fs-12 text-fixed-white">Total ORDERS</h6>
                 </div>
                 <div class="pb-0 mt-0">
                     <div class="d-flex">
                         <div>
-                            <h4 class="fs-20 fw-bold mb-1 text-fixed-white">$5,74.12</h4>
-                            <p class="mb-0 fs-12 text-fixed-white op-7">Compared to last week</p>
+                            <h4 class="fs-20 fw-bold mb-1 text-fixed-white">@ViewBag.Order</h4>
+                        
                         </div>
-                        <span class="float-end my-auto ms-auto">
-                            <i class="fas fa-arrow-circle-up text-fixed-white"></i>
-                            <span class="text-fixed-white op-7"> +427</span>
-                        </span>
+
                     </div>
                 </div>
             </div>
@@ -62,18 +59,15 @@
         <div class="card overflow-hidden sales-card bg-danger-gradient">
             <div class="px-3 pt-3  pb-2 pt-0">
                 <div>
-                    <h6 class="mb-3 fs-12 text-fixed-white">TODAY EARNINGS</h6>
+                    <h6 class="mb-3 fs-12 text-fixed-white">Total monthly revenue</h6>
                 </div>
                 <div class="pb-0 mt-0">
                     <div class="d-flex">
                         <div>
-                            <h4 class="fs-20 fw-bold mb-1 text-fixed-white">$1,230.17</h4>
-                            <p class="mb-0 fs-12 text-fixed-white op-7">Compared to last week</p>
+                            <h4 class="fs-20 fw-bold mb-1 text-fixed-white">$@ViewBag.Earning</h4>
+                           
                         </div>
-                        <span class="float-end my-auto ms-auto">
-                            <i class="fas fa-arrow-circle-down text-fixed-white"></i>
-                            <span class="text-fixed-white op-7"> -23.09%</span>
-                        </span>
+                     
                     </div>
                 </div>
             </div>
@@ -84,18 +78,15 @@
         <div class="card overflow-hidden sales-card bg-success-gradient">
             <div class="px-3 pt-3  pb-2 pt-0">
                 <div>
-                    <h6 class="mb-3 fs-12 text-fixed-white">TOTAL EARNINGS</h6>
+                    <h6 class="mb-3 fs-12 text-fixed-white">TOTAL Product</h6>
                 </div>
                 <div class="pb-0 mt-0">
                     <div class="d-flex">
                         <div>
-                            <h4 class="fs-20 fw-bold mb-1 text-fixed-white">$7,125.70</h4>
-                            <p class="mb-0 fs-12 text-fixed-white op-7">Compared to last week</p>
+                            <h4 class="fs-20 fw-bold mb-1 text-fixed-white">@ViewBag.Product</h4>
+                           
                         </div>
-                        <span class="float-end my-auto ms-auto">
-                            <i class="fas fa-arrow-circle-up text-fixed-white"></i>
-                            <span class="text-fixed-white op-7"> 52.09%</span>
-                        </span>
+                       
                     </div>
                 </div>
             </div>
@@ -106,18 +97,15 @@
         <div class="card overflow-hidden sales-card bg-warning-gradient">
             <div class="px-3 pt-3  pb-2 pt-0">
                 <div>
-                    <h6 class="mb-3 fs-12 text-fixed-white">PRODUCT SOLD</h6>
+                    <h6 class="mb-3 fs-12 text-fixed-white">Total Category</h6>
                 </div>
                 <div class="pb-0 mt-0">
                     <div class="d-flex">
                         <div>
-                            <h4 class="fs-20 fw-bold mb-1 text-fixed-white">$4,820.50</h4>
-                            <p class="mb-0 fs-12 text-fixed-white op-7">Compared to last week</p>
+                            <h4 class="fs-20 fw-bold mb-1 text-fixed-white">@ViewBag.Category</h4>
+                          
                         </div>
-                        <span class="float-end my-auto ms-auto">
-                            <i class="fas fa-arrow-circle-down text-fixed-white"></i>
-                            <span class="text-fixed-white op-7"> -152.3</span>
-                        </span>
+                      
                     </div>
                 </div>
             </div>
@@ -129,55 +117,68 @@
 
 <!-- row opened -->
 <div class="row">
-    <div class="col-md-12 col-lg-12 col-xl-7">
+    <div class="col-md-12 col-lg-12 col-xl-7" style="width:120%">
         <div class="card">
             <div class="card-header pb-0">
                 <div class="d-flex justify-content-between">
                     <h4 class="card-title mb-0">Order status</h4>
-                    <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-light bg-transparent rounded-pill" data-bs-toggle="dropdown">
-                        <i class="fe fe-more-horizontal"></i>
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="javascript:void(0);">Action</a>
-                        <a class="dropdown-item" href="javascript:void(0);">
-                            Another
-                            Action
-                        </a>
-                        <a class="dropdown-item" href="javascript:void(0);">
-                            Something Else
-                            Here
-                        </a>
-                    </div>
-                </div>
-                <p class="fs-12 text-muted mb-0">Order Status and Tracking. Track your order from ship date to arrival. To begin, enter your order number.</p>
-            </div>
-            <div class="card-body">
-                <div class="total-revenue">
                     <div>
-                        <h4>120,750</h4>
-                        <label><span class="bg-primary"></span>success</label>
+                        @functions {
+                            public string IsSelected(int optionValue, int currentValue)
+                            {
+                                return optionValue == currentValue ? "selected" : "";
+                            }
+                        }
+
+                       
+                        
+                        
                     </div>
-                    <div>
-                        <h4>56,108</h4>
-                        <label><span class="bg-danger"></span>Pending</label>
-                    </div>
-                    <div>
-                        <h4>32,895</h4>
-                        <label><span class="bg-warning"></span>Failed</label>
-                    </div>
-                </div>
-                <div id="Sales-bar" class="sales-bar mt-4"></div>
-            </div>
+                   
+            
+           
         </div>
     </div>
-    <div class="col-lg-12 col-xl-5">
-        <div class="card card-dashboard-map-one">
-            <h4 class="card-title">Sales Revenue by Customers in USA</h4>
-            <p class="fs-12 text-muted">Sales Performance of all states in the United States.</p>
-            <div id="us-map1" class="pt-1"></div>
-        </div>
-    </div>
+            <label for="month">Select Month:</label>
+            <select id="month" name="month" class="form-select">
+                @for (int i = 1; i <= 12; i++)
+                {
+                    <option value="@i" selected="@IsSelected(i, ViewBag.CurrentMonth)">Month @i</option>
+                }
+            </select>
+            <button type="button" id="viewBtn">View</button>
+
+            <div>
+                <canvas id="myChart" width="400" height="400"></canvas>
+            </div>
+    
 </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-7" style="width:120%">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title mb-0">Order status</h4>
+                            <div>
+                               
+
+
+
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+
+                    <div>
+                        <canvas id="revenueChart" width="800" height="400"></canvas>
+                 
+                    </div>
+                </div>
 <!-- row closed -->
 
 <!-- row opened -->
@@ -189,88 +190,30 @@
                 <p class="fs-12 mb-0 text-muted">A customer is an individual or business that purchases the goods service has evolved to include real-time</p>
             </div>
             <div class="card-body p-0 customers mt-1">
-                <div class="list-group list-lg-group list-group-flush">
-                    <div class="list-group-item list-group-item-action">
-                        <div class="d-flex">
-                            <img class="avatar avatar-md rounded-circle my-auto me-3" src="~/Backend/assets/images/faces/3.jpg" alt="Image description">
-                            <div class="flex-grow-1">
-                                <div class="d-flex align-items-center">
-                                    <div class="mt-0">
-                                        <h5 class="mb-1 fs-15">Samantha Melon</h5>
-                                        <p class="mb-0 fs-13 text-muted">User ID: #1234 <span class="text-success ms-2 d-inline-block">Paid</span></p>
-                                    </div>
-                                    <div class="ms-auto w-45 fs-16 mt-2">
-                                        <div id="spark1" class="w-100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-group-item list-group-item-action br-t-1">
-                        <div class="d-flex">
-                            <img class="avatar avatar-md rounded-circle my-auto me-3" src="~/Backend/assets/images/faces/11.jpg" alt="Image description">
-                            <div class="flex-grow-1">
-                                <div class="d-flex align-items-center">
-                                    <div class="mt-1">
-                                        <h5 class="mb-1 fs-15">Jimmy Changa</h5>
-                                        <p class="mb-0 fs-13 text-muted">User ID: #1234 <span class="text-danger ms-2 d-inline-block">Pending</span></p>
-                                    </div>
-                                    <div class="ms-auto w-45 fs-16 mt-2">
-                                        <div id="spark2" class="w-100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-group-item list-group-item-action br-t-1">
-                        <div class="d-flex">
-                            <img class="avatar avatar-md rounded-circle my-auto me-3" src="~/Backend/assets/images/faces/17.jpg" alt="Image description">
-                            <div class="flex-grow-1">
-                                <div class="d-flex align-items-center">
-                                    <div class="mt-1">
-                                        <h5 class="mb-1 fs-15">Gabe Lackmen</h5>
-                                        <p class="mb-0 fs-13 text-muted">User ID: #1234 <span class="text-danger ms-2 d-inline-block">Pending</span></p>
-                                    </div>
-                                    <div class="ms-auto w-45 fs-16 mt-2">
-                                        <div id="spark3" class="w-100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-group-item list-group-item-action br-t-1">
-                        <div class="d-flex">
-                            <img class="avatar avatar-md rounded-circle my-auto me-3" src="~/Backend/assets/images/faces/15.jpg" alt="Image description">
-                            <div class="flex-grow-1">
-                                <div class="d-flex align-items-center">
-                                    <div class="mt-1">
-                                        <h5 class="mb-1 fs-15">Manuel Labor</h5>
-                                        <p class="mb-0 fs-13 text-muted">User ID: #1234 <span class="text-success ms-2 d-inline-block">Paid</span></p>
-                                    </div>
-                                    <div class="ms-auto w-45 fs-16 mt-2">
-                                        <div id="spark4" class="w-100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-group-item list-group-item-action br-t-1 br-be-7 br-bs-7">
-                        <div class="d-flex">
-                            <img class="avatar avatar-md rounded-circle my-auto me-3" src="~/Backend/assets/images/faces/6.jpg" alt="Image description">
-                            <div class="flex-grow-1">
-                                <div class="d-flex align-items-center">
-                                    <div class="mt-1">
-                                        <h5 class="mb-1 fs-15">Sharon Needles</h5>
-                                        <p class="b-0 fs-13 text-muted mb-0">User ID: #1234 <span class="text-success ms-2 d-inline-block">Paid</span></p>
-                                    </div>
-                                    <div class="ms-auto w-45 fs-16 mt-2">
-                                        <div id="spark5" class="w-100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        <table id="file-export" class="table table-bordered text-nowrap w-100">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                 
+                                    <th>Price</th>
+                                    <th>Image</th>
+                                   
+
+                                </tr>
+                            </thead>
+                            @foreach (var top in ViewBag.TopProducts)
+                            {
+                                <tr>
+                                    <td>@top.Name</td>
+                                    <td>@top.Price</td>
+                                    <td><img src="~/media/products/@top.Image" width="120px" height="150px" /></td>
+                                </tr>
+                            }
+                            <tbody>
+
+                               
+                            </tbody>
+                        </table>
             </div>
         </div>
     </div>
@@ -362,6 +305,7 @@
         </div>
     </div>
 </div>
+
 <!-- row close -->
 
 <!-- row opened -->
@@ -460,4 +404,65 @@
         </div>
     </div>
 </div>
+       @section scripts{
+           <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+            <script>
+                $(document).ready(function () {
+                    $('#viewBtn').click(function () {
+                        // Dữ liệu mẫu số lượng đơn hàng theo tháng
+                        var sampleData = {
+                            "January": 120,
+                            "February": 150,
+                            "March": 180,
+                            "April": 100,
+                            "May": 200,
+                            "June": 220,
+                            "July": 180,
+                            "August": 250,
+                            "September": 200,
+                            "October": 150,
+                            "November": 170,
+                            "December": 190
+                        };
+
+                        // Gọi hàm vẽ biểu đồ với dữ liệu mẫu
+                        drawChart(sampleData);
+                    });
+
+                    function drawChart(data) {
+                        // Lấy context của canvas để vẽ biểu đồ
+                        var ctx = document.getElementById('myChart').getContext('2d');
+
+                        // Xóa biểu đồ cũ nếu có
+                        if (window.myChart !== undefined)
+                            window.myChart.destroy();
+
+                        // Tạo biểu đồ mới
+                        window.myChart = new Chart(ctx, {
+                            type: 'bar', // Loại biểu đồ (bar chart)
+                            data: {
+                                labels: Object.keys(data), // Nhãn trục x (tháng)
+                                datasets: [{
+                                    label: 'Monthly Order Count', // Nhãn cho dataset
+                                    data: Object.values(data), // Dữ liệu của biểu đồ (số lượng đơn hàng)
+                                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Màu nền của cột
+                                    borderColor: 'rgba(54, 162, 235, 1)', // Màu viền của cột
+                                    borderWidth: 1 // Độ dày của viền
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true // Bắt đầu trục y từ giá trị 0
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            </script>
+
+       }
+
 <!-- /row -->

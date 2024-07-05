@@ -57,6 +57,8 @@ builder.Services.AddSingleton<IVnPayService, VnPayService>();
 builder.Services.AddSingleton<IVnPayService, VnPayService>();
 builder.Services.AddScoped<CommentService, CommentServiceImpl>();
 builder.Services.AddScoped<WishlistService, WishListServiceImpl>();
+builder.Services.AddScoped<StaticalService, StaticalServiceImpl>();
+builder.Services.AddScoped<VoucherService, VoucherServiceImpl>();
 
 builder.Services.AddHttpContextAccessor();
 
