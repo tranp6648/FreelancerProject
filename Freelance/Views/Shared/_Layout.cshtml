@@ -63,7 +63,90 @@
 
 </head>
     <style>
+        #button-contact-vr {
+    position: fixed;
+    bottom: 0;
+    z-index: 99999;
+}
         /* Ẩn menu dropdown ban đầu */
+        #zalo-vr {
+    transition: 1s all;
+    -moz-transition: 1s all;
+    -webkit-transition: 1s all;
+}
+ .button-contact {
+    position: relative;
+}
+.phone-vr-img-circle a {
+    display: block;
+    line-height: 37px;
+}
+.button-contact .phone-vr {
+    position: relative;
+    visibility: visible;
+    background-color: transparent;
+    width: 90px;
+    height: 90px;
+    cursor: pointer;
+    z-index: 11;
+    -webkit-backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    transition: visibility .5s;
+    left: 0;
+    bottom: 0;
+    display: block;
+}
+#zalo-vr .phone-vr-circle-fill {
+    box-shadow: 0 0 0 0 #2196F3;
+    background-color: rgba(33, 150, 243, 0.7);
+}
+.phone-vr-circle-fill {
+    width: 65px;
+    height: 65px;
+    top: 12px;
+    left: 12px;
+    position: absolute;
+    box-shadow: 0 0 0 0 #c31d1d;
+    background-color: rgba(230, 8, 8, 0.7);
+    border-radius: 50%;
+    border: 2px solid transparent;
+    -webkit-animation: phone-vr-circle-fill 2.3s infinite ease-in-out;
+    animation: phone-vr-circle-fill 2.3s infinite ease-in-out;
+    transition: all .5s;
+    -webkit-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    -webkit-animuiion: zoom 1.3s infinite;
+    animation: zoom 1.3s infinite;
+}
+#zalo-vr .phone-vr-img-circle {
+    background-color: #2196F3;
+}
+.phone-vr-img-circle {
+    background-color: #e60808;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    top: 25px;
+    left: 25px;
+    position: absolute;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    -webkit-animation: phonering-alo-circle-img-anim 1s infinite ease-in-out;
+    animation: phone-vr-circle-fill 1s infinite ease-in-out;
+}
+.phone-vr-img-circle img {
+    max-height: 25px;
+    max-width: 27px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+}
         .category-dropdown .dropdown-box {
             display: none;
         }
@@ -72,7 +155,7 @@
         .category-dropdown:hover .dropdown-box {
             display: block;
         }
-
+    
     .zalo-share-button {
         position: fixed;
         bottom: 20px;
@@ -81,17 +164,13 @@
         padding: 10px 20px;
         font-size: 16px;
         color: white;
-        background-color: #0068ff; /* Zalo blue color */
+        /* Zalo blue color */
         text-align: center;
         text-decoration: none;
         border-radius: 5px;
         transition: background-color 0.3s;
         z-index: 1000;
     }
-
-        .zalo-share-button:hover {
-            background-color: #0056cc; /* Darker blue on hover */
-        }
 
     .zalo-icon {
         vertical-align: middle;
@@ -1501,11 +1580,43 @@
         });
     });
 </script> *@
+<div id="button-contact-vr">
+    <div id="gom-all-in-one">
+        <div id="contact-vr" class="button-contact">
+            <div class="phone-vr">
+                    <div class="phone-vr-circle-fill" style="box-shadow:0 0 0 0 #2196F3;background-color:rgba(33, 150, 243, 0.7)"></div>
+                <div class="phone-vr-img-circle" style="background-color:#fff !important">
+                    <a target="_blank" href="">
+                        <img src="https://tazako.vn/wp-content/plugins/button-contact-vr/img/contact.png" alt="">
+                    </a>
+                </div>
+            </div>
+        </div>
+            <div id="zalo-vr" class="button-contact">
+                <div class="phone-vr">
+                    <div class="phone-vr-circle-fill"></div>
+                    <div class="phone-vr-img-circle">
+                        <a target="_blank" href="">
+                            <img src="https://tazako.vn/wp-content/plugins/button-contact-vr/img/zalo.png" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div id="phone-vr" class="button-contact">
+                <div class="phone-vr">
+                    <div class="phone-vr-circle-fill" style="opacity:0.7;box-shadow:0 0 0 0 #febc12;background-color:#febc12"></div>
+                    <div class="phone-vr-img-circle" style="background-color:#febc12">
+                        <a target="_blank" href="">
+                            <img src="https://tazako.vn/wp-content/plugins/button-contact-vr/img/phone.png" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
 
-    <a href="https://zalo.me/share?url=YOUR_URL_TO_SHARE" class="zalo-share-button" target="_blank">
-        <img src="~/Frontend/assets/images.jpg" alt="Zalo Icon" class="zalo-icon" width="20" height="20">
-        Share on Zalo
-    </a>
+
+   
 </body>
 
 </html>>

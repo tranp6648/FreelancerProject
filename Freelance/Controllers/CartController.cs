@@ -126,7 +126,7 @@ namespace PhinaMart.Controllers
                 ViewBag.PaypalClientId = _paypalClient.ClientId;
 
                 // Redirect to the Checkout action
-                return View("Checkout",Cart);
+                return RedirectToAction("Checkout",Cart);
             }
             catch (Exception ex)
             {
