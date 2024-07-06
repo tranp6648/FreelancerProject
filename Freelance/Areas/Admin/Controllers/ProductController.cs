@@ -35,14 +35,15 @@ namespace PhinaMart.Areas.Admin.Controllers
         }
 
         [Route("UpdateQuantity/{id}")]
-        public IActionResult UpdateQuantity(int id)
+        public async Task<IActionResult> UpdateQuantity(int id)
         {
             var product = _PhinaContext.Products.Find(id);
             if (product == null)
             {
                 return NotFound();
             }
-            return View(product);
+            ViewBag.Product=product;
+            return View();
         }
 
         [HttpPost]
