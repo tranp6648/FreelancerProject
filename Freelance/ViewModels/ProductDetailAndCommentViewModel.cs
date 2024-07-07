@@ -8,6 +8,7 @@
         public CreateRating Score { get; set; }
 
         public DisplayRating DisplayRating { get; set; }
+        public int Quantity { get; set; }
     }
     
 }

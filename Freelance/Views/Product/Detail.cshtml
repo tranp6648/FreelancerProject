@@ -1438,21 +1438,9 @@
                 }
             }
 
-            plusButton.addEventListener('click', () => {
-                let currentValue = parseInt(quantityInput.value);
-                if (currentValue < 20) {
-                    quantityInput.value = currentValue + 1;
-                }
-                updateQuantity(quantityInput.value);
-            });
+         
 
-            minusButton.addEventListener('click', () => {
-                let currentValue = parseInt(quantityInput.value);
-                if (currentValue > 1) {
-                    quantityInput.value = currentValue - 1;
-                }
-                updateQuantity(quantityInput.value);
-            });
+         
 
             quantityInput.addEventListener('input', () => {
                 updateQuantity(quantityInput.value);
